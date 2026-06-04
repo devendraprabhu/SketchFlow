@@ -15,7 +15,7 @@ const Nav = () => {
     console.log(supabase.auth.getSession())
   return (
     
-    <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between sticky top-0 z-50 bg-white/70 backdrop-blur-md">
    
       <h1 className="text-6xl  tracking-tight">
         SketchFlow
