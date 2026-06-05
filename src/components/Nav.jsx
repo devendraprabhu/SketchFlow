@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase"
 
 
 const Nav = () => {
+    const navigate = useNavigate();
+
     const handleLogin = async()=>{
         await supabase.auth.signInWithOAuth({
             provider:"google",
@@ -13,8 +16,8 @@ const Nav = () => {
 }
 
  const handlesession = async()=>{
-  const {session} = await supabase.auth.getSession()
-    if(session.session){
+  const { data } = await supabase.auth.getSession()
+    if(data?.session){
       navigate("/dashboard")
     }
  }
@@ -23,7 +26,6 @@ const Nav = () => {
   handlesession()
  },[])
 
-    console.log(supabase.auth.getSession())
   return (
     
     <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
