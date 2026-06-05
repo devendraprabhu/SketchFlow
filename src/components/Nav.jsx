@@ -10,8 +10,19 @@ const Nav = () => {
                 redirectTo:`${window.location.origin}/dashboard`
             }
         })
-      
+}
+
+ const handlesession = async()=>{
+  const {session} = await supabase.auth.getSession()
+    if(session.session){
+      navigate("/dashboard")
     }
+ }
+
+ useEffect(()=>{
+  handlesession()
+ },[])
+
     console.log(supabase.auth.getSession())
   return (
     
