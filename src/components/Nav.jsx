@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../supabase"
-<<<<<<< HEAD
-//geeeee
-=======
->>>>>>> fixy
 
+//geeeee
 const Nav = () => {
   const navigate = useNavigate();
 
@@ -29,22 +26,12 @@ const Nav = () => {
     handlesession();
   }, []);
 
-<<<<<<< HEAD
-    console.log(supabase.auth.getSession())
-    console.log(supabase.auth.getUser())
-  return (
-    
-    <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between sticky top-0 z-50 bg-white/70 backdrop-blur-md">
-   
-      <h1 className="text-6xl  tracking-tight">
-        SketchFlow
-      </h1>
-=======
+
   return (
     <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between sticky top-0 z-50 bg-white/70 backdrop-blur-md">
       <h1 className="text-6xl tracking-tight">SketchFlow</h1>
       
->>>>>>> fixy
+ 
       <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
         <li className="hover:text-black cursor-pointer font-medium">Home</li>
         <li className="hover:text-black cursor-pointer">Pricing</li>
