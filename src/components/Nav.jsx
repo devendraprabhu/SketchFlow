@@ -1,6 +1,6 @@
 import React from "react";
 import { supabase } from "../supabase"
-
+//geeeee
 
 const Nav = () => {
     const handleLogin = async()=>{
@@ -13,6 +13,7 @@ const Nav = () => {
       
     }
     console.log(supabase.auth.getSession())
+    console.log(supabase.auth.getUser())
   return (
     
     <nav className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between sticky top-0 z-50 bg-white/70 backdrop-blur-md">
