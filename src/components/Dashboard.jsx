@@ -23,6 +23,35 @@ const Dashboard = () => {
       setpreview(data)
       setfile(selectedFile)
     }
+  }
+  const handleGenerateCode = async () =>{
+    if(!file){
+      return alert("Please Upload a file First")
+    }
+    const filename = `${Date.now()}-${file.name}`
+    const {error}= await supabase.storage.from('flowstate-image').upload(filename,file)
+    if(error){
+      console.log(error)
+      return;
+    }
+    const {data} = await supabase.storage.from('flowstate-image').getPublicUrl(filename)
+    console.log(data.publicUrl)
+    if(data){
+      const { data: authData } = await supabase.auth.getUser();
+      const {error:dbError}=await supabase.from('projects').insert({
+        project_name: filename,
+        image_url: data.publicUrl,
+        user_id: authData.user.id
+      })
+      if(dbError){
+        console.log(dbError)
+        return;
+      }
+      else{
+        console.log("Project Created Successfully");
+      }
+    }
+
 
   }
     const navigate = useNavigate();
@@ -78,7 +107,7 @@ const Dashboard = () => {
           <div className='flex flex-col gap-4 items-center'>
           <img src={preview} alt="Preview" className='w-auto h-auto max-w-2xl rounded-lg object-cover' />
           <div className='flex items-center justify-center gap-4 mt-2'>
-          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-blue-600 transition flex items-center gap-2'>Generate Code <ArrowRight /> </button>
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-blue-600 transition flex items-center gap-2' onClick={handleGenerateCode}>Generate Code <ArrowRight /> </button>
           <button className='bg-gray-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-gray-600 transition flex items-center gap-2' onClick={goback}>Choose Another One</button>
           </div>
          </div>
@@ -120,7 +149,7 @@ const Dashboard = () => {
         </div>
       </main>
     </div>
-  ) 
+  )
 }
 
 export default Dashboard
