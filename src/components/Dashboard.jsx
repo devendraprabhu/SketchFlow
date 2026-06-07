@@ -7,11 +7,13 @@ import { Settings } from 'lucide-react';
 import { ArrowRight } from 'lucide-react';
 
 
+
 const Dashboard = () => {
   const [userName, setuserName] = useState(" ")
   const [image, setimage] = useState("")
   const [preview, setpreview] = useState(null)
   const [file, setfile] = useState(null)
+  const [result, setresult] = useState("")
   const goback = () =>{
     setpreview(null)
     setfile(null)
@@ -51,6 +53,27 @@ const Dashboard = () => {
         console.log("Project Created Successfully");
       }
     }
+
+    console.log("sending file to Pytho Backend")
+    try{
+      const airesponse = await fetch("http://localhost:8000/api/transcribe",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            video_url:data.publicUrl
+          })
+        })
+       const aiData= await airesponse.json()
+       console.log(aiData)
+       setresult(aiData)
+       
+      }
+    catch (e){
+      console.log(e)
+    }
+    
 
 
   }
@@ -105,9 +128,18 @@ const Dashboard = () => {
          {preview ? ( 
           <div className='flex items-center justify-center w-full'>
           <div className='flex flex-col gap-4 items-center'>
-          <img src={preview} alt="Preview" className='w-auto h-auto max-w-2xl rounded-lg object-cover' />
+          <video
+                  src={preview}
+                  controls
+                  className='w-full max-w-2xl rounded-lg'
+                  autoPlay
+                  loop
+                  muted
+                  preload="metadata"
+                  
+                  />
           <div className='flex items-center justify-center gap-4 mt-2'>
-          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-blue-600 transition flex items-center gap-2' onClick={handleGenerateCode}>Generate Code <ArrowRight /> </button>
+          <button className='bg-blue-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-blue-600 transition flex items-center gap-2' onClick={handleGenerateCode}>Generate Content <ArrowRight /> </button>
           <button className='bg-gray-500 text-white px-4 py-2 rounded-lg font-medium cursor-pointer hover:bg-gray-600 transition flex items-center gap-2' onClick={goback}>Choose Another One</button>
           </div>
          </div>
@@ -135,18 +167,50 @@ const Dashboard = () => {
               <p className="mb-2 text-sm text-gray-500">
                 <span className="font-semibold text-gray-700">Click to upload</span> or drag and drop
               </p>
-              <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+              <p className="text-xs text-gray-500">Mp4,gif,WEBP</p>
             </div>
             <FileInput id="dropzone-file" className="hidden" onChange={handleFile} />
             <div className="bg-black text-white px-4 py-2 mt-2 rounded-lg font-medium cursor-pointer hover:bg-gray-800 transition">Upload</div>
           </Label>
         }
         </div>
+          {result && (
+  <div className="max-w-4xl mx-auto space-y-6">
 
-        <div>
-          <h3 className="text-2xl font-semibold font-['Roboto'] mb-1">Recent</h3>
-          <p className="text-gray-500 text-base font-['Roboto'] font-light">Continue where you left off</p>
-        </div>
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">Transcript</h2>
+      <p>{result.transcript}</p>
+    </div>
+
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">YouTube Title</h2>
+      <p>{result.content.youtube_title}</p>
+    </div>
+
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">Description</h2>
+      <p>{result.content.youtube_description}</p>
+    </div>
+
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">LinkedIn Post</h2>
+      <p>{result.content.linkedin_post}</p>
+    </div>
+
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">X Post</h2>
+      <p>{result.content.x_post}</p>
+    </div>
+
+    <div className="bg-white border rounded-xl p-4">
+      <h2 className="font-bold text-xl mb-2">Hashtags</h2>
+      <p>{result.content.hashtags}</p>
+    </div>
+
+  </div>
+)}
+
+        
       </main>
     </div>
   )
