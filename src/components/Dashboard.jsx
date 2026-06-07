@@ -56,7 +56,7 @@ const Dashboard = () => {
 
     console.log("sending file to Pytho Backend")
     try{
-      const airesponse = await fetch("http://localhost:8000/api/transcribe",{
+      const airesponse = await fetch("https://flowstatebackend-production.up.railway.app/api/transcribe",{
           method:"POST",
           headers:{
             "Content-Type":"application/json"
