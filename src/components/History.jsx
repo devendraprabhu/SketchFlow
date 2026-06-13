@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from "../supabase"
 import { useNavigate } from 'react-router-dom'
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, Zap } from 'lucide-react';
 import ProjectView from './ProjectView'
 const History = () => {
   const [userName, setuserName] = useState(" ")
   const [image, setimage] = useState("")
+  const [credits, setcredits] = useState(0);
   const [projects, setprojects] = useState([]);
   const [loading, setloading] = useState(true);
   const [selectedProject, setselectedProject] = useState();
@@ -19,7 +20,7 @@ const History = () => {
   }
 
   const projectview = async ()=>{
-    navigate("/projectview")
+    navigate("/projectview/")
   }
 
   const fetchUserData = async () => {
@@ -43,9 +44,24 @@ const History = () => {
     }
   }
 
+ const fetchUserCredits = async () =>{
+  const { data: authData } = await supabase.auth.getUser();
+    if(authData?.user){
+      const {data: ProfileData,error}= await supabase.from("profiles").select('credits').eq('id',authData.user.id).single()
+      if(ProfileData){
+        setcredits(ProfileData.credits)
+      }
+      else if (error){
+        console.log(error)
+        
+      }
+    }
+ }
+
  
   useEffect(() => {
     fetchUserData()
+    fetchUserCredits()
   }, [])
 
   const history = () => navigate("/history")
@@ -54,7 +70,7 @@ const History = () => {
   return (
     <div>
       <div>
-        <nav className='w-full px-6 py-4 box-border flex items-center justify-between bg-white text-black backdrop-blur-2xl'>
+        <nav className='w-full px-6 py-4 box-border flex items-center justify-between bg-white text-black backdrop-blur-2xl border-b border-slate-100 sticky top-0 z-40'>
         <div className='flex items-center gap-10'>
           <div>
             <h1 className="text-2xl tracking-tight font-['Bebas_Neue'] cursor-pointer" onClick={goDashboard}>Flowstate</h1>
@@ -66,7 +82,7 @@ const History = () => {
         </div>
         
         <div className='flex items-center gap-4'>
-          <button className='bg-white text-black px-3 py-2 rounded-lg font-medium cursor-pointer hover:bg-gray-200'><Settings size={18} /></button>
+          <span className='flex gap-2 p-2 font-medium'><Zap size={25}/> {credits} </span>
           <img src={image} alt="User Profile" referrerPolicy='no-referrer' className='rounded-full w-10 h-10 object-cover' /> <span className='text-gray-500 font-medium'>{userName}</span>
           <button onClick={handlelogout} className='bg-white text-black px-3 py-2 rounded-lg font-medium cursor-pointer text-sm hover:bg-black hover:text-white border border-transparent hover:border-white transition'><LogOut size={18} /></button>
         </div>

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { supabase } from "../supabase"
 import { useNavigate } from 'react-router-dom'
 import { Label, FileInput } from 'flowbite-react'
-import { LogOut, Settings, ArrowRight, Loader2, AlertCircle,Video , Link,MessageSquare,Hash } from 'lucide-react';
+import { LogOut, Settings, ArrowRight, Loader2, AlertCircle,Video , Link,MessageSquare,Hash,Zap } from 'lucide-react';
 import { TextAlignStart } from 'lucide-react';
+import UpgradeButton from './Pricing'
 
 const Dashboard = () => {
   const [userName, setuserName] = useState("")
@@ -14,7 +15,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
-  
+  const [isPro, setIsPro] = useState(false);
+ const [credits, setcredits] = useState(0);
   const navigate = useNavigate();
 
   const goback = () => {
@@ -38,6 +40,19 @@ const Dashboard = () => {
     if(!file){
       return alert("Please Upload a file First")
     }
+    
+    if (file.size > 50 * 1024 * 1024) {
+    alert("File is too large! Please upload an MP4 under 50MB.");
+    event.target.value = null; // resets the input
+    return;
+  }
+
+    if(credits <= 0){
+      setErrorMessage("You are out of credits ! Please Upgrade to generate more")
+      return;
+    }
+
+
 
     setLoading(true)
     setErrorMessage("")
@@ -94,6 +109,20 @@ const Dashboard = () => {
          await supabase.from("projects").update({
           generated_code: JSON.stringify(aiData)
          }).eq("id", projectId)
+
+         const updateCredits =  credits-1
+
+         const {error : creditError} = await supabase.from("profiles").update({
+          credits: updateCredits
+         }).eq("id", authData.user.id)
+
+         if(!creditError){
+          setcredits(updateCredits)
+         }
+         else{
+          console.log(creditError)
+         }
+
          
          setresult(aiData)
          setLoading(false)
@@ -119,13 +148,36 @@ const Dashboard = () => {
     }
   }
 
+ const fetchUserCredits = async () =>{
+  const { data: authData } = await supabase.auth.getUser();
+    if(authData.user){
+      const {data: ProfileData,error}= await supabase.from("profiles").select('credits').eq('id',authData.user.id).single()
+      if(ProfileData){
+        setcredits(ProfileData.credits)
+      }
+      else if (error){
+        console.log(error)
+        
+      }
+    }
+
+
+ }
+
   const history = () => {
     navigate("/history")
+  }
+  const pricing= () =>{
+    navigate("/pricing")
   }
 
   useEffect(() => {
     username()
   }, [])
+
+  useEffect(()=>{
+    fetchUserCredits()
+  },[])
 
   return (
     <div className="min-h-screen bg-slate-50/50 text-slate-900 transition-colors duration-200">
@@ -136,11 +188,12 @@ const Dashboard = () => {
           </div>
           <ul className='flex items-center gap-5 font-medium'>
             <li className='hover:underline text-gray-500 hover:text-black cursor-pointer' onClick={history}>History</li>
+            <li className='hover:underline text-gray-500 hover:text-black cursor-pointer'onClick={pricing}>Upgrade</li>
           </ul>
         </div>
         
         <div className='flex items-center gap-4'>
-          <button className='bg-white text-black px-3 py-2 rounded-lg font-medium cursor-pointer hover:bg-gray-200'><Settings size={18} /></button>
+         <span className='flex gap-2 p-2  font-medium '><Zap size={25}  /> {credits} </span>
           <img src={image} alt="User Profile" referrerPolicy='no-referrer' className='rounded-full w-10 h-10 object-cover' /> <span className='text-gray-500 font-medium'>{userName}</span>
           <button onClick={handlelogout} className='bg-white text-black px-3 py-2 rounded-lg font-medium cursor-pointer text-sm hover:bg-black hover:text-white border border-transparent hover:border-white transition'><LogOut size={18} /></button>
         </div>
@@ -234,9 +287,9 @@ const Dashboard = () => {
                 <p className="mb-2 text-sm text-gray-500">
                   <span className="font-semibold text-gray-700">Click to upload</span> or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">Mp4,gif,WEBP</p>
+                <p className="text-xs text-gray-500">Mp4</p>
               </div>
-              <FileInput id="dropzone-file" className="hidden" onChange={handleFile} />
+              <FileInput id="dropzone-file" className="hidden" onChange={handleFile} accept='video/mp4' />
               <div className="bg-black text-white px-4 py-2 mt-2 rounded-lg font-medium cursor-pointer hover:bg-gray-800 transition">Upload</div>
              </Label>
            </div>
