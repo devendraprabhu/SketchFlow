@@ -40,7 +40,7 @@ const Pricing = () => {
         order_id: orderData.id,
         handler: async function (response) {
           try {
-            const verifyResponse = await fetch("http://localhost:8000/api/verify", {
+            const verifyResponse = await fetch("https://flowstatebackend-production.up.railway.app/api/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
