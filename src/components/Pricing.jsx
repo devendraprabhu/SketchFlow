@@ -23,7 +23,7 @@ const Pricing = () => {
     }
 
     try {
-      const orderResponse = await fetch("http://localhost:8000/api/pricing", {
+      const orderResponse = await fetch("https://flowstatebackend-production.up.railway.app/api/pricing", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amount, user_id: authData.user.id })
