@@ -37,7 +37,7 @@ const Pricing = () => {
         currency: "INR",
         name: "FlowState",
         description: `Upgrade to ${creditsToAdd} Credits`,
-        order_id: orderData.id,
+        order_id: orderData.order_id,
         handler: async function (response) {
           try {
             const verifyResponse = await fetch("https://flowstatebackend-production.up.railway.app/api/verify", {
