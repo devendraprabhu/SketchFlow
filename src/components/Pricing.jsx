@@ -101,7 +101,7 @@ const Pricing = () => {
                   <span className="text-gray-700 font-medium">20 AI Generation Credits</span>
                 </li>
               </ul>
-              <button className="w-full bg-black text-white font-bold text-lg py-4 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-md mt-auto" onClick={() => handleCheckout(199, 20)}>
+              <button className="w-full bg-black text-white font-bold text-lg py-4 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 shadow-md mt-auto" onClick={() => handleCheckout(10, 20)}>
                 <Zap size={20} className="text-yellow-400 fill-yellow-400" />
                 Refill Now
               </button>
@@ -123,7 +123,7 @@ const Pricing = () => {
                   <span className="text-gray-700 font-medium">100 AI Generation Credits</span>
                 </li>
               </ul>
-              <button onClick={() => handleCheckout(399, 100)} className="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-md mt-auto">
+              <button onClick={() => handleCheckout(20, 100)} className="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shadow-md mt-auto">
                 <Zap size={20} className="text-yellow-400 fill-yellow-400" />
                 Refill Now
               </button>
