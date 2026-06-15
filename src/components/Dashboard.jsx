@@ -29,6 +29,16 @@ const Dashboard = () => {
   const handleFile = (e) => {
     const selectedFile = e.target.files[0];
     if(selectedFile){
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        alert("File is too large! Please choose a file size less than 50MB.");
+        e.target.value = null;
+        return;
+      }
+      if (selectedFile.type !== "video/mp4") {
+        alert("Invalid file format! Please change it to MP4 format.");
+        e.target.value = null;
+        return;
+      }
       const data = URL.createObjectURL(selectedFile)
       setpreview(data)
       setfile(selectedFile)
