@@ -34,7 +34,7 @@ const Landing = () => {
           
           {/* Headline */}
           <h1 className="text-7xl md:text-8xl lg:text-[5rem] font-black tracking-tighter text-black leading-[1.05] max-w-5xl">
-            Extract scripts from any{" "}
+            Convert any short from video into written content for any{" "}
             <span 
               key={index} 
               className="block text-black transition-all duration-500 ease-out"
