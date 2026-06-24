@@ -33,8 +33,8 @@ const Landing = () => {
         <div className="flex flex-col items-center text-center space-y-8">
           
           {/* Headline */}
-          <h1 className="text-7xl md:text-8xl lg:text-[5rem] font-black tracking-tighter text-black leading-[1.05] max-w-5xl">
-            Convert any short from video into written content for any{" "}
+          <h1 className="text-5xl md:text-5xl lg:text-[4.5rem] font-black  text-black  max-w-7xl">
+            Turn short-form videos into written content for
             <span 
               key={index} 
               className="block text-black transition-all duration-500 ease-out"
